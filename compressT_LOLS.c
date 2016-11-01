@@ -5,8 +5,14 @@
 char* compress(char *string) {
 	int length = strlen(string);
 	char *compressed = (char *)malloc(sizeof(char) * (length * 2 + 1));
-	for (int i = 0; i < length; i++) {
-		
+	int consecutive = 1;
+	for (int i = 0; i < length - 1; i++) {
+		char c = string[i];
+		if (c == string[i + 1])
+			consecutive++;
+		else {
+			
+		}
 	}
 	return compressed;
 }
