@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -Wall -pedantic -ansi -pthread -std=c11 -lm
+CFLAGS = -g -Wall -pedantic -ansi -pthread -std=c11
 OBJS = compressT_LOLS.o functions.o
 DEPS = functions.h
 
@@ -7,7 +7,7 @@ all: compress
 	rm *.o
 
 compress : $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o compress
+	$(CC) $(CFLAGS) $(OBJS) -o compress -lm
 
 compressT_LOLS.o: compressT_LOLS.c
 	$(CC) $(CFLAGS) -c compressT_LOLS.c
