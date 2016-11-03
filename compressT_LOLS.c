@@ -58,7 +58,8 @@ void read_file(FILE *file) {
 		fseek(file, 0, SEEK_END);
 		size_t length = ftell(file);
 		rewind(file);
-		char *buffer = (char *)malloc(length);
+		char *buffer = (char *)malloc(length + 1);
+		buffer[length] = '\0';
 		fread(buffer, 1, length, file);
 		char *compressed = compress(buffer);
 		printf("Compressed string: %s\n", compressed);
@@ -69,9 +70,8 @@ void read_file(FILE *file) {
 }
 
 int main(int argc, char **argv) {
-	if (argc != 2) {
+	if (argc != 2)
 		fprintf(stderr, "ERROR: Invalid number of arguments; only 1 argument required\n");
-	}
 	else {
     		FILE *file = fopen(argv[1], "r");
 		if (file == NULL)
