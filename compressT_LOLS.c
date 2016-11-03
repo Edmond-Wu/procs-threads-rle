@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <pthread.h> /*needs -pthread compilation option*/
 #include "compressT_LOLS.h"
 
 int num_digits(int n) {
