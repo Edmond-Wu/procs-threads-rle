@@ -18,16 +18,15 @@ char* compress(char *string) {
 			consecutive++;
 		else {
 			char *placeholder;
-			if (consecutive == 1) {
-				placeholder = (char *)malloc(sizeof(char) * 2);
-				placeholder[0] = c;
-				placeholder[1] = '\0';
-			}
-			else if (consecutive == 2) {
+			if (consecutive == 1 || consecutive == 2) {
 				placeholder = (char *)malloc(sizeof(char) * 3);
 				placeholder[0] = c;
-				placeholder[1] = c;
-				placeholder[2] = '\0';
+				if (consecutive == 1)
+					placeholder[1] = '\0';
+				else {
+					placeholder[1] = c;
+					placeholder[2] = '\0';
+				}
 			}
 			else {
 				placeholder = (char *)malloc(sizeof(char) * (2 + num_digits(consecutive)));
@@ -70,15 +69,17 @@ void read_file(FILE *file) {
 }
 
 int main(int argc, char **argv) {
+	//2 only additional argument is a text file name
 	if (argc != 2)
 		fprintf(stderr, "ERROR: Invalid number of arguments; only 1 argument required\n");
 	else {
     		FILE *file = fopen(argv[1], "r");
 		if (file == NULL)
 			fprintf(stderr, "Invalid file\n");
-		else
+		else {
 			read_file(file);
-		fclose(file);
+			fclose(file);
+		}
 	}
 	return 0;
 }
