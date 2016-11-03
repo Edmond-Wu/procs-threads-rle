@@ -43,14 +43,42 @@ char* compress(char *string) {
 	return compressed;
 }
 
+void write_file(char *file_name, char *content) {
+	FILE *file = fopen(file_name, "w");
+	if (file != NULL) {
+		fputs(content, file);
+		fclose(file);
+	}
+}
+
+void read_file(FILE *file) {
+	if (file == NULL)
+		fprintf(stderr, "Invalid file input\n");
+	else {
+		fseek(file, 0, SEEK_END);
+		size_t length = ftell(file);
+		rewind(file);
+		char *buffer = (char *)malloc(length);
+		fread(buffer, 1, length, file);
+		char *compressed = compress(buffer);
+		printf("Compressed string: %s\n", compressed);
+		write_file("test_txt_LOLS", compressed);
+		free(compressed);
+		free(buffer);
+	}
+}
+
 int main(int argc, char **argv) {
 	if (argc != 2) {
 		fprintf(stderr, "ERROR: Invalid number of arguments; only 1 argument required\n");
 	}
 	else {
-    		char *compressed = compress(argv[1]);
-		printf("Compressed string: %s\n", compressed);
-		free(compressed);
+    		FILE *file = fopen(argv[1], "r");
+		if (file == NULL)
+			fprintf(stderr, "Invalid file\n");
+		else
+			read_file(file);
+		fclose(file);
 	}
 	return 0;
 }
