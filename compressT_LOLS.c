@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <math.h>
 #include <pthread.h> /*needs -pthread compilation option*/
 #include "functions.h"
 
