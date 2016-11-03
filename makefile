@@ -1,18 +1,18 @@
 CC = gcc
-CFLAGS = -g -Wall -pedantic -ansi -std=c11 -pthread
+CFLAGS = -g -Wall -pedantic -ansi -pthread -std=c11 -lm
 OBJS = compressT_LOLS.o functions.o
 DEPS = functions.h
 
 all: compress
 	rm *.o
 
-memgrind : $(OBJS)
+compress : $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o compress
 
-memgrind.o: compressT_LOLS.c
+compressT_LOLS.o: compressT_LOLS.c
 	$(CC) $(CFLAGS) -c compressT_LOLS.c
 
-mymalloc.o: functions.c functions.h
+functions.o: functions.c functions.h
 	$(CC) $(CFLAGS) -c functions.c
 
 clean:
