@@ -39,6 +39,8 @@ char* compress(char *string) {
 			consecutive = 1;
 		}
 	}
+	int compressed_length = strlen(compressed);
+	compressed[compressed_length - 1] = '\0';
 	return compressed;
 }
 
