@@ -3,6 +3,24 @@
 #include <pthread.h> /*needs -pthread compilation option*/
 #include "functions.h"
 
+void process_file(FILE *file) {
+	if (file == NULL)
+		fprintf(stderr, "Invalid file input\n");
+	else {
+		fseek(file, 0, SEEK_END);
+		size_t length = ftell(file);
+		rewind(file);
+		char *buffer = (char *)malloc(length + 1);
+		buffer[length] = '\0';
+		fread(buffer, 1, length, file);
+		char *compressed = compress(buffer);
+		printf("Compressed string: %s\n", compressed);
+		write_file("test_txt_LOLS", compressed);
+		free(compressed);
+		free(buffer);
+	}
+}
+
 int main(int argc, char **argv) {
 	//2 only additional argument is a text file name
 	if (argc != 2)
@@ -12,7 +30,7 @@ int main(int argc, char **argv) {
 		if (file == NULL)
 			fprintf(stderr, "Invalid file\n");
 		else {
-			read_file(file);
+			process_file(file);
 			fclose(file);
 		}
 	}

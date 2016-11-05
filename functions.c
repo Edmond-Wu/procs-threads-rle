@@ -51,21 +51,3 @@ void write_file(char *file_name, char *content) {
 		fclose(file);
 	}
 }
-
-void read_file(FILE *file) {
-	if (file == NULL)
-		fprintf(stderr, "Invalid file input\n");
-	else {
-		fseek(file, 0, SEEK_END);
-		size_t length = ftell(file);
-		rewind(file);
-		char *buffer = (char *)malloc(length + 1);
-		buffer[length] = '\0';
-		fread(buffer, 1, length, file);
-		char *compressed = compress(buffer);
-		printf("Compressed string: %s\n", compressed);
-		write_file("test_txt_LOLS", compressed);
-		free(compressed);
-		free(buffer);
-	}
-}
