@@ -8,6 +8,18 @@ int num_digits(int n) {
 	return floor(log10(abs(n))) + 1;
 }
 
+char* get_substring(char *string, int start, int end) {
+	char *substring;
+	int difference = end - start;
+	substring = malloc((difference + 1) * sizeof(char));
+	int i;
+	for (i = start; i < end; i++) {
+		substring[i - start] = string[i];
+	}
+	substring[difference] = '\0';
+	return substring;
+}
+
 char* compress(char *string) {
 	int length = strlen(string);
 	char *compressed = (char *)malloc(sizeof(char) * (length * 2 + 1));
