@@ -25,7 +25,14 @@ void process_file(FILE *file) {
 		char *buffer = (char *)malloc(length + 1);
 		buffer[length] = '\0';
 		fread(buffer, 1, length, file);
-		
+
+		int buffer_length = strlen(buffer);
+		int char_size;
+		if (buffer_length % NUM_THREADS == 0)
+			char_size = buffer_length / NUM_THREADS;
+		else {
+			
+		}
 		pthread_t thread;
 		pthread_create(&thread, NULL, thread_function, (void *)buffer);
 		printf("waiting for thread to terminate...\n");
