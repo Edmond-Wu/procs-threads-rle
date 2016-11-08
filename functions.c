@@ -8,6 +8,16 @@ int num_digits(int n) {
 	return floor(log10(abs(n))) + 1;
 }
 
+char* extract_file(FIlE *file) {
+	fseek(file, 0, SEEK_END);
+	size_t length = ftell(file);
+	rewind(file);
+	char *buffer = (char *)malloc(length + 1);
+	fread(buffer, 1, length, file);
+	buffer[length] = '\0';
+	return buffer;
+}
+
 char* get_substring(char *string, int start, int end) {
 	int difference = end - start;
 	//char substring[difference];

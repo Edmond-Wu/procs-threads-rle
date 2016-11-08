@@ -13,6 +13,13 @@
 int num_digits(int n);
 
 /**
+ * Extracts file contents and returns it as a string
+ * @param  file [name of file]
+ * @return      [string containing file's contents]
+ */
+char* extract_file(FILE *file);
+
+/**
  * Gets a substring from an input string
  * @param  string [input]
  * @param  start  [starting index]
@@ -21,6 +28,12 @@ int num_digits(int n);
  */
 char* get_substring(char *string, int start, int end);
 
+/**
+ * Splits a string into parts
+ * @param  string [string to be split]
+ * @param  parts  [number of parts to be split]
+ * @return        [array containing split strings]
+ */
 char** split_string(char *string, int parts);
 
 /**
