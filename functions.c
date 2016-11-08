@@ -20,16 +20,38 @@ char* get_substring(char *string, int start, int end) {
 	return substring;
 }
 
-char **split_string(char *string, int parts) {
-	int buffer_length = strlen(buffer);
-	int char_size;
-	int num_rounded_up_strings;
-	if (buffer_length % NUM_THREADS == 0)
-		char_size = buffer_length / NUM_THREADS;
-	else {
-		char_size = buffer_length / NUM_THREADS + 1;
-		num_rounded_up_strings = buffer_length / char_size;
+char** split_string(char *string, int parts) {
+	int length = strlen(string);
+	int char_size = length / parts;
+	int num_rounded_up_strings = -1;
+	if (length % parts != 0)
+		num_rounded_up_strings = length / (char_size + 1);
+
+	char **array = (char **)malloc(sizeof(char *) * (parts + 1));
+	int counter = 0;
+	for (int i = 0; i < parts; i++) {
+		array[i] = (char *)malloc(sizeof(char) * (char_size + 2));
+		char *substring;
+		if (num_rounded_up_strings > 0) {
+			substring = get_substring(string, counter, counter + (char_size + 1));
+			num_rounded_up_strings--;
+			counter += (char_size + 1);
+		}
+		else {
+			//even string lengths
+			if (num_rounded_up_strings == -1) {
+				substring = get_substring(string, counter, counter + char_size);
+				counter += char_size;
+			}
+			//otherwise it means you're at last segment
+			else {
+				int difference = length - counter - 1;
+				substring = get_substring(string, counter, counter + difference);
+			}
+		}
+		array[i] = substring;
 	}
+	return array;
 }
 
 char* compress(char *string) {

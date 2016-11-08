@@ -21,6 +21,8 @@ int num_digits(int n);
  */
 char* get_substring(char *string, int start, int end);
 
+char** split_string(char *string, int parts);
+
 /**
  * RLE compression algorithm
  * repeated instances of character replaced with a number followed by that character

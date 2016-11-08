@@ -26,12 +26,27 @@ void process_file(FILE *file) {
 		buffer[length] = '\0';
 		fread(buffer, 1, length, file);
 
-		
-
+		char **array = split_string(buffer, NUM_THREADS);
+		pthread_t threads[NUM_THREADS];
+		for (int x = 0; x < NUM_THREADS; x++)
+			printf("Substring: %s\n", array[x]);
+		for (int i = 0; i < NUM_THREADS; i++)
+			printf("Substring: %s\n", compress(array[i]));
+		/*
+		for (int i = 0; i < NUM_THREADS; i++) {
+			pthread_t thread;
+			pthread_create(&threads[i], NULL, thread_function, array[i]);
+		}
+		for (int j = 0; j < NUM_THREADS; j++) {
+			pthread_join(threads[j], NULL);
+		}
+		*/
+		/*
 		pthread_t thread;
 		pthread_create(&thread, NULL, thread_function, (void *)buffer);
 		printf("waiting for thread to terminate...\n");
 		pthread_join(thread, NULL);
+		*/
 
 		//compress string and write to new file
 		//char *compressed = compress(buffer);
