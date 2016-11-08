@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <pthread.h> /*needs -pthread compilation option*/
 #include "functions.h"
-#define NUM_THREADS 5 /*number of threads*/
 
 void thread_function(void *arg) {
 	char *str = compress((char *)arg);
@@ -11,7 +10,7 @@ void thread_function(void *arg) {
 	free(str);
 }
 
-void process_file(FILE *file) {
+void process_file(FILE *file, int parts) {
 	if (file == NULL)
 		fprintf(stderr, "Invalid file input\n");
 	else {
@@ -23,21 +22,23 @@ void process_file(FILE *file) {
 		size_t length = ftell(file);
 		rewind(file);
 		char *buffer = (char *)malloc(length + 1);
-		buffer[length] = '\0';
 		fread(buffer, 1, length, file);
+		buffer[length] = '\0';
+		char *compressed = compress(buffer);
+		printf("Compressed string: %s\n", compressed);
 
-		char **array = split_string(buffer, NUM_THREADS);
-		pthread_t threads[NUM_THREADS];
-		for (int x = 0; x < NUM_THREADS; x++)
+		char **array = split_string(buffer, parts);
+		//pthread_t threads[parts];
+		for (int x = 0; x < parts; x++)
 			printf("Substring: %s\n", array[x]);
-		for (int i = 0; i < NUM_THREADS; i++)
-			printf("Substring: %s\n", compress(array[i]));
+		for (int i = 0; i < parts; i++)
+			printf("Compressed: %s\n", compress(array[i]));
 		/*
-		for (int i = 0; i < NUM_THREADS; i++) {
+		for (int i = 0; i < parts; i++) {
 			pthread_t thread;
 			pthread_create(&threads[i], NULL, thread_function, array[i]);
 		}
-		for (int j = 0; j < NUM_THREADS; j++) {
+		for (int j = 0; j < parts; j++) {
 			pthread_join(threads[j], NULL);
 		}
 		*/
@@ -47,26 +48,21 @@ void process_file(FILE *file) {
 		printf("waiting for thread to terminate...\n");
 		pthread_join(thread, NULL);
 		*/
-
-		//compress string and write to new file
-		//char *compressed = compress(buffer);
-		//printf("Compressed string: %s\n", compressed);
-		//write_file("test_txt_LOLS", compressed);
-		//free(compressed);
 		free(buffer);
 	}
 }
 
 int main(int argc, char **argv) {
 	//2 only additional argument is a text file name
-	if (argc != 2)
+	if (argc != 3)
 		fprintf(stderr, "ERROR: Invalid number of arguments; only 1 argument required\n");
 	else {
     		FILE *file = fopen(argv[1], "r");
 		if (file == NULL)
 			fprintf(stderr, "Invalid file\n");
 		else {
-			process_file(file);
+			int parts = atoi(argv[2]);
+			process_file(file, parts);
 			fclose(file);
 		}
 		/*

@@ -67,8 +67,9 @@ char* compress(char *string) {
 			if (consecutive == 1 || consecutive == 2) {
 				placeholder = (char *)malloc(sizeof(char) * 3);
 				placeholder[0] = c;
-				if (consecutive == 1)
+				if (consecutive == 1) {
 					placeholder[1] = '\0';
+				}
 				else {
 					placeholder[1] = c;
 					placeholder[2] = '\0';
@@ -86,7 +87,7 @@ char* compress(char *string) {
 		}
 	}
 	int compressed_length = strlen(compressed);
-	compressed[compressed_length - 1] = '\0';
+	compressed[compressed_length] = '\0';
 	return compressed;
 }
 
