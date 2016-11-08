@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h> /*needs -pthread compilation option*/
 #include "functions.h"
-#define NUM_THREADS 5
+#define NUM_THREADS 5 /*number of threads*/
 
 void thread_function(void *arg) {
 	char *str = compress((char *)arg);
@@ -28,11 +28,14 @@ void process_file(FILE *file) {
 
 		int buffer_length = strlen(buffer);
 		int char_size;
+		int num_rounded_up_strings;
 		if (buffer_length % NUM_THREADS == 0)
 			char_size = buffer_length / NUM_THREADS;
 		else {
-			
+			char_size = buffer_length / NUM_THREADS + 1;
+			num_rounded_up_strings = buffer_length / char_size;
 		}
+
 		pthread_t thread;
 		pthread_create(&thread, NULL, thread_function, (void *)buffer);
 		printf("waiting for thread to terminate...\n");
@@ -59,6 +62,11 @@ int main(int argc, char **argv) {
 			process_file(file);
 			fclose(file);
 		}
+		/*
+		int length = strlen(argv[1]);
+		char *substring = get_substring(argv[1], 0, length);
+		printf("Substring: %s\n", substring);
+		*/
 	}
 	return 0;
 }

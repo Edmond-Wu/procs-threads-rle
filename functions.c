@@ -9,15 +9,19 @@ int num_digits(int n) {
 }
 
 char* get_substring(char *string, int start, int end) {
-	char *substring;
 	int difference = end - start;
-	substring = malloc((difference + 1) * sizeof(char));
+	//char substring[difference];
+	char *substring = malloc((difference + 1) * sizeof(char));
 	int i;
 	for (i = start; i < end; i++) {
 		substring[i - start] = string[i];
 	}
 	substring[difference] = '\0';
 	return substring;
+}
+
+char **split_string(char *string, int parts) {
+	
 }
 
 char* compress(char *string) {
