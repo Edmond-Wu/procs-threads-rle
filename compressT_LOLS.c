@@ -17,10 +17,6 @@ void process_file(FILE *file, int parts) {
 		//remove older outputs
 		remove("test_txt_LOLS");
 
-		//open file and store contents in string
-		fseek(file, 0, SEEK_END);
-		size_t length = ftell(file);
-		rewind(file);
 		char *buffer = extract_file(file);
 		char *compressed = compress(buffer);
 		printf("Compressed string: %s\n", compressed);
