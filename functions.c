@@ -57,7 +57,7 @@ char* compress(char *string) {
 }
 
 void write_file(char *file_name, char *content) {
-	FILE *file = fopen(file_name, "w");
+	FILE *file = fopen(file_name, "a");
 	if (file != NULL) {
 		fputs(content, file);
 		fclose(file);
