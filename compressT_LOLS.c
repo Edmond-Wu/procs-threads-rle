@@ -3,10 +3,10 @@
 #include <pthread.h> /*needs -pthread compilation option*/
 #include "functions.h"
 
-void thread_function(void *arg) {
+void thread_function(char *file_name, int parts, void *arg) {
 	char *str = compress((char *)arg);
 	printf("Compressed: %s\n", str);
-	write_file("test_txt_LOLS", str);
+	write_file(file_name, str);
 	free(str);
 }
 
