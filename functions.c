@@ -8,7 +8,11 @@ int num_digits(int n) {
 	return floor(log10(abs(n))) + 1;
 }
 
-char* extract_file(FIlE *file) {
+char* extract_file(FILE *file) {
+	if (file == NULL) {
+		fprintf(stderr, "Invalid file to be read\n");
+		return NULL;
+	}
 	fseek(file, 0, SEEK_END);
 	size_t length = ftell(file);
 	rewind(file);
