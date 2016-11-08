@@ -17,7 +17,7 @@ void process_file(FILE *file) {
 	else {
 		//remove older outputs
 		remove("test_txt_LOLS");
-		
+
 		//open file and store contents in string
 		fseek(file, 0, SEEK_END);
 		size_t length = ftell(file);
@@ -26,15 +26,7 @@ void process_file(FILE *file) {
 		buffer[length] = '\0';
 		fread(buffer, 1, length, file);
 
-		int buffer_length = strlen(buffer);
-		int char_size;
-		int num_rounded_up_strings;
-		if (buffer_length % NUM_THREADS == 0)
-			char_size = buffer_length / NUM_THREADS;
-		else {
-			char_size = buffer_length / NUM_THREADS + 1;
-			num_rounded_up_strings = buffer_length / char_size;
-		}
+		
 
 		pthread_t thread;
 		pthread_create(&thread, NULL, thread_function, (void *)buffer);

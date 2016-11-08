@@ -21,7 +21,15 @@ char* get_substring(char *string, int start, int end) {
 }
 
 char **split_string(char *string, int parts) {
-	
+	int buffer_length = strlen(buffer);
+	int char_size;
+	int num_rounded_up_strings;
+	if (buffer_length % NUM_THREADS == 0)
+		char_size = buffer_length / NUM_THREADS;
+	else {
+		char_size = buffer_length / NUM_THREADS + 1;
+		num_rounded_up_strings = buffer_length / char_size;
+	}
 }
 
 char* compress(char *string) {
