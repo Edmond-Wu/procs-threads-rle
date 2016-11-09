@@ -18,6 +18,11 @@ typedef struct Args {
  */
 int num_digits(int n);
 
+/**
+ * Gets extension of a file
+ * @param  file_name [file name]
+ * @return           [extension of file]
+ */
 char* get_file_extension(char *file_name);
 
 /**
