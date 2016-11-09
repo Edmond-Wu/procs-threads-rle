@@ -48,10 +48,9 @@ char** split_string(char *string, int parts) {
 	if (length % parts != 0)
 		num_rounded_up_strings = length / (char_size + 1);
 
-	char **array = (char **)malloc(sizeof(char *) * (parts + 1));
+	char **array = (char **)malloc(sizeof(char *) * (parts));
 	int counter = 0;
 	for (int i = 0; i < parts; i++) {
-		array[i] = (char *)malloc(sizeof(char) * (char_size + 2));
 		char *substring;
 		if (num_rounded_up_strings > 0) {
 			substring = get_substring(string, counter, counter + (char_size + 1));

@@ -9,12 +9,14 @@ void thread_function(Args *args) {
 	printf("Compressed: %s\n", str);
 	int file_name_length = strlen(args->file_name);
 	char *new_file_name = (char *)malloc(sizeof(char) * (file_name_length + 7));
-	//test.txt -> test_txt_LOLS
+	
 	strncpy(new_file_name,args->file_name,file_name_length - strlen(strpbrk(args->file_name,".")));
 	sprintf(new_file_name, "%s_%s_LOLS%d", new_file_name, get_file_extension(args->file_name), args->part);
+	
 	write_file(new_file_name, str);
 	free(new_file_name);
 	free(str);
+	free(args->string);
 	free(args);
 	return NULL;
 }
@@ -40,6 +42,8 @@ void process_file(char *file_name, FILE *file, int parts) {
 			pthread_join(threads[j], NULL);
 		}
 		
+		free(array);
+		free(compressed);
 		free(buffer);
 	}
 }
