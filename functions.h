@@ -5,12 +5,20 @@
 #include <string.h>
 #include <math.h>
 
+typedef struct Args {
+	char *file_name;
+	char *string;
+	int part;
+} Args;
+
 /**
  * Gives number of digits of an integer
  * @param  n [integer]
  * @return   [number of digits n has]
  */
 int num_digits(int n);
+
+char* get_file_extension(char *file_name);
 
 /**
  * Extracts file contents and returns it as a string

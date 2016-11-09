@@ -1,47 +1,52 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <pthread.h> /*needs -pthread compilation option*/
 #include "functions.h"
 
-void thread_function(char *file_name, int parts, void *arg) {
-	char *str = compress((char *)arg);
+void thread_function(Args *args) {
+	char *str = compress(args->string);
 	printf("Compressed: %s\n", str);
-	write_file(file_name, str);
+	int file_name_length = strlen(args->file_name);
+	char *new_file_name = (char *)malloc(sizeof(char) * (file_name_length + 7));
+	if (args->part > 1)
+		sprintf(new_file_name, "test_%s_LOLS%d", get_file_extension(args->file_name), args->part);
+	else
+		sprintf(new_file_name, "test_%s_LOLS", get_file_extension(args->file_name));
+	write_file(new_file_name, str);
+	free(new_file_name);
 	free(str);
+	return NULL;
 }
 
-void process_file(FILE *file, int parts) {
+void process_file(char *file_name, FILE *file, int parts) {
 	if (file == NULL)
 		fprintf(stderr, "Invalid file input\n");
 	else {
-		//remove older outputs
-		remove("test_txt_LOLS");
-
 		char *buffer = extract_file(file);
 		char *compressed = compress(buffer);
 		printf("Compressed string: %s\n", compressed);
 
 		char **array = split_string(buffer, parts);
-		//pthread_t threads[parts];
+		pthread_t threads[parts];
+		/*
 		for (int x = 0; x < parts; x++)
 			printf("Substring: %s\n", array[x]);
 		for (int i = 0; i < parts; i++)
 			printf("Compressed: %s\n", compress(array[i]));
-		/*
+		*/
+		
 		for (int i = 0; i < parts; i++) {
-			pthread_t thread;
-			pthread_create(&threads[i], NULL, thread_function, array[i]);
+			Args *args = (Args *)malloc(sizeof(Args));
+			args->part = i + 1;
+			args->string = array[i];
+			args->file_name = file_name;
+			pthread_create(&threads[i], NULL, thread_function, args);
 		}
 		for (int j = 0; j < parts; j++) {
 			pthread_join(threads[j], NULL);
 		}
-		*/
-		/*
-		pthread_t thread;
-		pthread_create(&thread, NULL, thread_function, (void *)buffer);
-		printf("waiting for thread to terminate...\n");
-		pthread_join(thread, NULL);
-		*/
+		
 		free(buffer);
 	}
 }
@@ -52,18 +57,17 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "ERROR: Invalid number of arguments; only 1 argument required\n");
 	else {
     		FILE *file = fopen(argv[1], "r");
-		if (file == NULL)
-			fprintf(stderr, "Invalid file\n");
+		if (file == NULL) {
+			if (errno == ENOENT)
+				fprintf(stderr, "File doesn't exist\n");
+			else if (errno == EACCES)
+				fprintf(stderr, "Don't have file read permissions\n");
+		}
 		else {
 			int parts = atoi(argv[2]);
-			process_file(file, parts);
+			process_file(argv[1], file, parts);
 			fclose(file);
 		}
-		/*
-		int length = strlen(argv[1]);
-		char *substring = get_substring(argv[1], 0, length);
-		printf("Substring: %s\n", substring);
-		*/
 	}
 	return 0;
 }

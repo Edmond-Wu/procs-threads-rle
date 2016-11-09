@@ -8,6 +8,13 @@ int num_digits(int n) {
 	return floor(log10(abs(n))) + 1;
 }
 
+char* get_file_extension(char *file_name) {
+	char *dot = strrchr(file_name, '.');
+	if (!dot || dot == file_name)
+		return "";
+	return dot + 1;
+}
+
 char* extract_file(FILE *file) {
 	if (file == NULL) {
 		fprintf(stderr, "Invalid file to be read\n");
@@ -106,7 +113,7 @@ char* compress(char *string) {
 }
 
 void write_file(char *file_name, char *content) {
-	FILE *file = fopen(file_name, "a");
+	FILE *file = fopen(file_name, "w");
 	if (file != NULL) {
 		fputs(content, file);
 		fclose(file);
