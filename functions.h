@@ -5,6 +5,7 @@
 #include <string.h>
 #include <math.h>
 
+//struct containing various arguments to be passed into thread function
 typedef struct Args {
 	char *file_name;
 	char *string;
