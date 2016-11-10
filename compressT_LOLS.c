@@ -4,7 +4,7 @@
 #include <pthread.h> /*needs -pthread compilation option*/
 #include "functions.h"
 
-void thread_function(Args *args) {
+void* thread_function(Args *args) {
 	char *str = compress(args->string);
 	printf("Compressed: %s\n", str);
 	int file_name_length = strlen(args->file_name);
@@ -36,7 +36,7 @@ void process_file(char *file_name, FILE *file, int parts) {
 			args->part = i;
 			args->string = array[i];
 			args->file_name = file_name;
-			pthread_create(&threads[i], NULL, thread_function, args);
+			pthread_create(&threads[i], NULL, thread_function, (void *)args);
 		}
 		for (int j = 0; j < parts; j++) {
 			pthread_join(threads[j], NULL);
