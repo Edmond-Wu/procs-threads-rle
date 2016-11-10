@@ -63,7 +63,6 @@ void process_file(char *file_name, FILE *file, int parts) {
 }
 
 int main(int argc, char **argv) {
-	//2 only additional argument is a text file name
 	if (argc != 3)
 		fprintf(stderr, "ERROR: Invalid number of arguments (2 required)\n");
 	else {
