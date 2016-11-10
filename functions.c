@@ -31,7 +31,6 @@ char* extract_file(FILE *file) {
 
 char* get_substring(char *string, int start, int end) {
 	int difference = end - start;
-	//char substring[difference];
 	char *substring = malloc((difference + 1) * sizeof(char));
 	int i;
 	for (i = start; i < end; i++) {
@@ -47,7 +46,6 @@ char** split_string(char *string, int parts) {
 	int num_rounded_up_strings = -1;
 	if (length % parts != 0)
 		num_rounded_up_strings = length / (char_size + 1);
-
 	char **array = (char **)malloc(sizeof(char *) * (parts));
 	int counter = 0;
 	for (int i = 0; i < parts; i++) {

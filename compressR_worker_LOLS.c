@@ -5,5 +5,6 @@
 #include "functions.h"
 
 int main(int argc, char **argv) {
-  return 0;
+	printf("I'm a worker\n");
+	return 0;
 }
