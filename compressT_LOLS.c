@@ -4,15 +4,20 @@
 #include <pthread.h> /*needs -pthread compilation option*/
 #include "functions.h"
 
+/**
+ * Thread function that compresses the string and writes it to a corresponding file
+ * @param args [argument struct, which includes a string, file name, and int]
+ */
 void* thread_function(Args *args) {
 	char *str = compress(args->string);
 	printf("Compressed: %s\n", str);
 	int file_name_length = strlen(args->file_name);
 	char *new_file_name = (char *)malloc(sizeof(char) * (file_name_length + 7));
-	
+
+	//create new file name
 	strncpy(new_file_name,args->file_name,file_name_length - strlen(strpbrk(args->file_name,".")));
 	sprintf(new_file_name, "%s_%s_LOLS%d", new_file_name, get_file_extension(args->file_name), args->part);
-	
+
 	write_file(new_file_name, str);
 	free(new_file_name);
 	free(str);
@@ -21,6 +26,13 @@ void* thread_function(Args *args) {
 	return NULL;
 }
 
+/**
+ * Function to process a file; read file and extract its contents
+ * split contents into array of strings, then compress each of them via multi-threading
+ * @param file_name [name of file]
+ * @param file      [actual file named file_name]
+ * @param parts     [how many parts to be split]
+ */
 void process_file(char *file_name, FILE *file, int parts) {
 	if (file == NULL)
 		fprintf(stderr, "Invalid file input\n");
@@ -31,6 +43,7 @@ void process_file(char *file_name, FILE *file, int parts) {
 
 		char **array = split_string(buffer, parts);
 		pthread_t threads[parts];
+		//multi-threading operation
 		for (int i = 0; i < parts; i++) {
 			Args *args = (Args *)malloc(sizeof(Args));
 			args->part = i;
@@ -38,10 +51,11 @@ void process_file(char *file_name, FILE *file, int parts) {
 			args->file_name = file_name;
 			pthread_create(&threads[i], NULL, thread_function, (void *)args);
 		}
+		//wait for threads to finish
 		for (int j = 0; j < parts; j++) {
 			pthread_join(threads[j], NULL);
 		}
-		
+
 		free(array);
 		free(compressed);
 		free(buffer);
