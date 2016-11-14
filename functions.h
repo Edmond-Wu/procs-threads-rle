@@ -19,6 +19,8 @@ typedef struct Args {
  */
 int num_digits(int n);
 
+int file_exists(char *file_name);
+
 /**
  * Gets extension of a file
  * @param  file_name [file name]

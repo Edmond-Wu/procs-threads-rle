@@ -9,16 +9,16 @@
  * @param args [argument struct, which includes a string, file name, and int]
  */
 void* thread_function(Args *args) {
-	char *str = compress(args->string);
-	printf("Compressed: %s\n", str);
+	char *compressed = compress(args->string);
+	//printf("Compressed: %s\n", compressed);
 	int file_name_length = strlen(args->file_name);
 	//creating new file name and writing to that file
 	char *new_file_name = (char *)malloc(sizeof(char) * (file_name_length + 7));
-	strncpy(new_file_name,args->file_name,file_name_length - strlen(strpbrk(args->file_name,".")));
+	strncpy(new_file_name, args->file_name, file_name_length - strlen(strpbrk(args->file_name, ".")));
 	sprintf(new_file_name, "%s_%s_LOLS%d", new_file_name, get_file_extension(args->file_name), args->part);
-	write_file(new_file_name, str);
+	write_file(new_file_name, compressed);
 	free(new_file_name);
-	free(str);
+	free(compressed);
 	free(args->string);
 	free(args);
 	return NULL;
@@ -36,20 +36,32 @@ void process_file(char *file_name, FILE *file, int parts) {
 		fprintf(stderr, "Invalid file input\n");
 	else {
 		char *buffer = extract_file(file);
-		char **array = split_string(buffer, parts);
-		//multi-threading
-		pthread_t threads[parts];
-		for (int i = 0; i < parts; i++) {
-			Args *args = (Args *)malloc(sizeof(Args));
-			args->part = i;
-			args->string = array[i];
-			args->file_name = file_name;
-			pthread_create(&threads[i], NULL, thread_function, args);
+		if (parts == 1) {
+			char *compressed = compress(buffer);
+			int file_name_length = strlen(file_name);
+			char *new_file = (char *)malloc(sizeof(char) * (file_name_length + 6));
+			strncpy(new_file, file_name, file_name_length - strlen(strpbrk(file_name, ".")));
+			sprintf(new_file, "%s_%s_LOLS", new_file, get_file_extension(file_name));
+			write_file(new_file, compressed);
+			free(new_file);
+			free(compressed);
 		}
-		for (int j = 0; j < parts; j++) {
-			pthread_join(threads[j], NULL);
+		else {
+			char **array = split_string(buffer, parts);
+			//multi-threading
+			pthread_t threads[parts];
+			for (int i = 0; i < parts; i++) {
+				Args *args = (Args *)malloc(sizeof(Args));
+				args->part = i;
+				args->string = array[i];
+				args->file_name = file_name;
+				pthread_create(&threads[i], NULL, thread_function, args);
+			}
+			for (int j = 0; j < parts; j++) {
+				pthread_join(threads[j], NULL);
+			}
+			free(array);
 		}
-		free(array);
 		free(buffer);
 	}
 }
@@ -67,7 +79,10 @@ int main(int argc, char **argv) {
 		}
 		else {
 			int parts = atoi(argv[2]);
-			process_file(argv[1], file, parts);
+			if (parts < 1)
+				fprintf(stderr, "Invalid number of parts to be split\n");
+			else
+				process_file(argv[1], file, parts);
 			fclose(file);
 		}
 	}

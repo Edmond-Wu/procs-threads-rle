@@ -2,10 +2,22 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <unistd.h>
 #include "functions.h"
 
 int num_digits(int n) {
 	return floor(log10(abs(n))) + 1;
+}
+
+int file_exists(char *file_name) {
+	if (access(file_name, F_OK) != -1) {
+		//printf("File exists\n");
+		return 1;
+	}
+	else {
+		//printf("File doesn't exist\n");
+		return 0;
+	}
 }
 
 char* get_file_extension(char *file_name) {
