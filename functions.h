@@ -19,6 +19,11 @@ typedef struct Args {
  */
 int num_digits(int n);
 
+/**
+ * Checks if a file exists in the current directory
+ * @param  file_name [name of file]
+ * @return           [1 if it exists, 0 if it doesn't]
+ */
 int file_exists(char *file_name);
 
 /**

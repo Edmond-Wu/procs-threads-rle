@@ -36,16 +36,30 @@ void process_file(char *file_name, FILE *file, int parts) {
 		fprintf(stderr, "Invalid file input\n");
 	else {
 		char *buffer = extract_file(file);
+		int file_name_length = strlen(file_name);
+		char *new_file = (char *)malloc(sizeof(char) * (file_name_length + 6));
+		strncpy(new_file, file_name, file_name_length - strlen(strpbrk(file_name, ".")));
+		sprintf(new_file, "%s_%s_LOLS", new_file, get_file_extension(file_name));
+		if (file_exists(new_file) == 1) {
+			fprintf(stderr, "Compressed file exists already\n");
+			return;
+		}
+		else {
+			char *new_file_threaded = (char *)malloc(sizeof(char) * (file_name_length + 7));
+			strcat(new_file_threaded, new_file);
+			strcat(new_file_threaded, '0');
+			if (file_exists(new_file_threaded) == 1) {
+				fprintf(stderr, "Compressed file exists already\n");
+				free(new_file_threaded);
+				return;
+			}
+		}
 		if (parts == 1) {
 			char *compressed = compress(buffer);
-			int file_name_length = strlen(file_name);
-			char *new_file = (char *)malloc(sizeof(char) * (file_name_length + 6));
-			strncpy(new_file, file_name, file_name_length - strlen(strpbrk(file_name, ".")));
-			sprintf(new_file, "%s_%s_LOLS", new_file, get_file_extension(file_name));
 			write_file(new_file, compressed);
-			free(new_file);
 			free(compressed);
 		}
+		free(new_file);
 		else {
 			char **array = split_string(buffer, parts);
 			//multi-threading
