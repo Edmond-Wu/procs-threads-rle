@@ -42,15 +42,20 @@ void process_file(char *file_name, FILE *file, int parts) {
 		sprintf(new_file, "%s_%s_LOLS", new_file, get_file_extension(file_name));
 		if (file_exists(new_file) == 1) {
 			fprintf(stderr, "Compressed file exists already\n");
+			free(buffer);
+			free(new_file);
 			return;
 		}
 		else {
 			char *new_file_threaded = (char *)malloc(sizeof(char) * (file_name_length + 7));
 			strcat(new_file_threaded, new_file);
-			strcat(new_file_threaded, '0');
+			new_file_threaded[file_name_length + 5] = '0';
+			new_file_threaded[file_name_length + 6] = '\0';
 			if (file_exists(new_file_threaded) == 1) {
-				fprintf(stderr, "Compressed file exists already\n");
+				fprintf(stderr, "Compressed files exist already\n");
 				free(new_file_threaded);
+				free(buffer);
+				free(new_file);
 				return;
 			}
 		}
@@ -59,7 +64,6 @@ void process_file(char *file_name, FILE *file, int parts) {
 			write_file(new_file, compressed);
 			free(compressed);
 		}
-		free(new_file);
 		else {
 			char **array = split_string(buffer, parts);
 			//multi-threading
@@ -76,6 +80,7 @@ void process_file(char *file_name, FILE *file, int parts) {
 			}
 			free(array);
 		}
+		free(new_file);
 		free(buffer);
 	}
 }
