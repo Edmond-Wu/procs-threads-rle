@@ -20,13 +20,6 @@ typedef struct Args {
 int num_digits(int n);
 
 /**
- * Checks if a file exists in the current directory
- * @param  file_name [name of file]
- * @return           [1 if it exists, 0 if it doesn't]
- */
-int file_exists(char *file_name);
-
-/**
  * Gets extension of a file
  * @param  file_name [file name]
  * @return           [extension of file]
@@ -65,6 +58,13 @@ char** split_string(char *string, int parts);
  * @return        [compressed string]
  */
 char* compress(char *string);
+
+/**
+ * Checks if compressed file(s) of the original file exist(s) in the current directory
+ * @param  file_name [name of file]
+ * @return           [1 if it exists, 0 if it doesn't]
+ */
+int compressed_exists(char *file_name);
 
 /**
  * Writes a string to a file

@@ -9,17 +9,6 @@ int num_digits(int n) {
 	return floor(log10(abs(n))) + 1;
 }
 
-int file_exists(char *file_name) {
-	if (access(file_name, F_OK) != -1) {
-		//printf("File exists\n");
-		return 1;
-	}
-	else {
-		//printf("File doesn't exist\n");
-		return 0;
-	}
-}
-
 char* get_file_extension(char *file_name) {
 	char *dot = strrchr(file_name, '.');
 	if (!dot || dot == file_name)
@@ -119,6 +108,31 @@ char* compress(char *string) {
 	int compressed_length = strlen(compressed);
 	compressed[compressed_length] = '\0';
 	return compressed;
+}
+
+int compressed_exists(char *file_name) {
+	char *new_file = (char *)malloc(sizeof(char) * (file_name_length + 6));
+	strncpy(new_file, file_name, file_name_length - strlen(strpbrk(file_name, ".")));
+	sprintf(new_file, "%s_%s_LOLS", new_file, get_file_extension(file_name));
+	if (access(new_file, F_OK) != -1) {
+		//fprintf(stderr, "Compressed file exists already\n");
+		free(new_file);
+		return 1;
+	}
+	else {
+		char *new_file_parts = (char *)malloc(sizeof(char) * (file_name_length + 7));
+		strcat(new_file_parts, new_file);
+		new_file_parts[file_name_length + 5] = '0';
+		new_file_parts[file_name_length + 6] = '\0';
+		if (access(new_file_parts, F_OK) != -1) {
+			//fprintf(stderr, "Compressed files exist already\n");
+			free(new_file_parts);
+			free(new_file);
+			return 1;
+		}
+		free(new_file_parts);
+	}
+	return 0;
 }
 
 void write_file(char *file_name, char *content) {

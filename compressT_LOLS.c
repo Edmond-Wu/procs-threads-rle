@@ -41,25 +41,10 @@ void process_file(char *file_name, FILE *file, int parts) {
 		strncpy(new_file, file_name, file_name_length - strlen(strpbrk(file_name, ".")));
 		sprintf(new_file, "%s_%s_LOLS", new_file, get_file_extension(file_name));
 		//abort if compressed file(s) already exist
-		if (file_exists(new_file) == 1) {
-			fprintf(stderr, "Compressed file exists already\n");
+		if (compressed_exists(file_name) == 1) {
+			fprintf(stderr, "Compressed file(s) exist!\n");
 			free(buffer);
-			free(new_file);
 			return;
-		}
-		else {
-			char *new_file_parts = (char *)malloc(sizeof(char) * (file_name_length + 7));
-			strcat(new_file_parts, new_file);
-			new_file_parts[file_name_length + 5] = '0';
-			new_file_parts[file_name_length + 6] = '\0';
-			if (file_exists(new_file_parts) == 1) {
-				fprintf(stderr, "Compressed files exist already\n");
-				free(new_file_parts);
-				free(buffer);
-				free(new_file);
-				return;
-			}
-			free(new_file_parts);
 		}
 		if (parts == 1) {
 			char *compressed = compress(buffer);
