@@ -40,7 +40,7 @@ void process_file(char *file_name, FILE *file, int parts) {
 		char *new_file = (char *)malloc(sizeof(char) * (file_name_length + 6));
 		strncpy(new_file, file_name, file_name_length - strlen(strpbrk(file_name, ".")));
 		sprintf(new_file, "%s_%s_LOLS", new_file, get_file_extension(file_name));
-
+		//abort if compressed file(s) already exist
 		if (file_exists(new_file) == 1) {
 			fprintf(stderr, "Compressed file exists already\n");
 			free(buffer);
@@ -68,7 +68,7 @@ void process_file(char *file_name, FILE *file, int parts) {
 		}
 		else {
 			char **array = split_string(buffer, parts);
-			//multi-threading
+			//multi-threading, number of threads = number of parts to be split
 			pthread_t threads[parts];
 			for (int i = 0; i < parts; i++) {
 				Args *args = (Args *)malloc(sizeof(Args));
