@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <unistd.h>
 
 //struct containing various arguments to be passed into thread function
 typedef struct Args {

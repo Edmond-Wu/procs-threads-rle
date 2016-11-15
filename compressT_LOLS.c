@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <errno.h>
 #include <pthread.h> /*needs -pthread compilation option*/
 #include "functions.h"
@@ -43,6 +42,7 @@ void process_file(char *file_name, FILE *file, int parts) {
 		//abort if compressed file(s) already exist
 		if (compressed_exists(file_name) == 1) {
 			fprintf(stderr, "Compressed file(s) exist!\n");
+			free(new_file);
 			free(buffer);
 			return;
 		}

@@ -1,8 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#include <unistd.h>
 #include "functions.h"
 
 int num_digits(int n) {
@@ -86,9 +81,8 @@ char* compress(char *string) {
 			if (consecutive == 1 || consecutive == 2) {
 				placeholder = (char *)malloc(sizeof(char) * 3);
 				placeholder[0] = c;
-				if (consecutive == 1) {
+				if (consecutive == 1)
 					placeholder[1] = '\0';
-				}
 				else {
 					placeholder[1] = c;
 					placeholder[2] = '\0';
@@ -116,7 +110,6 @@ int compressed_exists(char *file_name) {
 	strncpy(new_file, file_name, file_name_length - strlen(strpbrk(file_name, ".")));
 	sprintf(new_file, "%s_%s_LOLS", new_file, get_file_extension(file_name));
 	if (access(new_file, F_OK) != -1) {
-		//fprintf(stderr, "Compressed file exists already\n");
 		free(new_file);
 		return 1;
 	}
@@ -126,12 +119,12 @@ int compressed_exists(char *file_name) {
 		new_file_parts[file_name_length + 5] = '0';
 		new_file_parts[file_name_length + 6] = '\0';
 		if (access(new_file_parts, F_OK) != -1) {
-			//fprintf(stderr, "Compressed files exist already\n");
 			free(new_file_parts);
 			free(new_file);
 			return 1;
 		}
 		free(new_file_parts);
+		free(new_file);
 	}
 	return 0;
 }
