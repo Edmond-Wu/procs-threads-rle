@@ -111,6 +111,7 @@ char* compress(char *string) {
 }
 
 int compressed_exists(char *file_name) {
+	int file_name_length = strlen(file_name);
 	char *new_file = (char *)malloc(sizeof(char) * (file_name_length + 6));
 	strncpy(new_file, file_name, file_name_length - strlen(strpbrk(file_name, ".")));
 	sprintf(new_file, "%s_%s_LOLS", new_file, get_file_extension(file_name));
