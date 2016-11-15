@@ -68,13 +68,33 @@ char** split_string(char *string, int parts) {
 	return array;
 }
 
+int next_char_same(char *string, int index) {
+	int length = strlen(string);
+	char c = string[index];
+	if (index >= length)
+		return 0;
+	if (index != length - 1 && c == string[index + 1])
+		return 1;
+	int i = index + 1;
+	char x = string[i];
+	while (!isalpha(x)) {
+		x = string[i];
+		i++;
+	}
+	if (x == c)
+		return 1;
+	return 0;
+}
+
 char* compress(char *string) {
 	int length = strlen(string);
 	char *compressed = (char *)malloc(sizeof(char) * (length * 2 + 1));
 	int consecutive = 1;
 	for (int i = 0; i < length; i++) {
 		char c = string[i];
-		if (i != length - 1 && c == string[i + 1])
+		if (!isalpha(c))
+			continue;
+		if (next_char_same(string, i) == 1)
 			consecutive++;
 		else {
 			char *placeholder;

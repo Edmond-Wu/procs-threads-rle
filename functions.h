@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include <math.h>
 #include <unistd.h>
 
@@ -50,6 +51,8 @@ char* get_substring(char *string, int start, int end);
  * @return        [array containing split strings]
  */
 char** split_string(char *string, int parts);
+
+int next_char_same(char *string, int index);
 
 /**
  * RLE compression algorithm
