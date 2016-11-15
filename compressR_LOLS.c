@@ -9,10 +9,10 @@ int main(int argc, char **argv) {
 	else {
 		FILE *file = fopen(argv[1], "r");
 		if (file == NULL) {
-			if (errno == ENOENT)
+			if (errno == EACCES)
+				fprintf(stderr, "Lack file read permissions\n");
+			else
 				fprintf(stderr, "File doesn't exist\n");
-			else if (errno == EACCES)
-				fprintf(stderr, "Don't have file read permissions\n");
 		}
 		else {
 			int parts = atoi(argv[2]);

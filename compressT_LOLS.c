@@ -35,11 +35,12 @@ void process_file(char *file_name, FILE *file, int parts) {
 	if (file == NULL)
 		fprintf(stderr, "Invalid file input\n");
 	else {
-		char *buffer = extract_file(file);
 		int file_name_length = strlen(file_name);
+		char *buffer = extract_file(file);
 		char *new_file = (char *)malloc(sizeof(char) * (file_name_length + 6));
 		strncpy(new_file, file_name, file_name_length - strlen(strpbrk(file_name, ".")));
 		sprintf(new_file, "%s_%s_LOLS", new_file, get_file_extension(file_name));
+
 		if (file_exists(new_file) == 1) {
 			fprintf(stderr, "Compressed file exists already\n");
 			free(buffer);
@@ -47,17 +48,18 @@ void process_file(char *file_name, FILE *file, int parts) {
 			return;
 		}
 		else {
-			char *new_file_threaded = (char *)malloc(sizeof(char) * (file_name_length + 7));
-			strcat(new_file_threaded, new_file);
-			new_file_threaded[file_name_length + 5] = '0';
-			new_file_threaded[file_name_length + 6] = '\0';
-			if (file_exists(new_file_threaded) == 1) {
+			char *new_file_parts = (char *)malloc(sizeof(char) * (file_name_length + 7));
+			strcat(new_file_parts, new_file);
+			new_file_parts[file_name_length + 5] = '0';
+			new_file_parts[file_name_length + 6] = '\0';
+			if (file_exists(new_file_parts) == 1) {
 				fprintf(stderr, "Compressed files exist already\n");
-				free(new_file_threaded);
+				free(new_file_parts);
 				free(buffer);
 				free(new_file);
 				return;
 			}
+			free(new_file_parts);
 		}
 		if (parts == 1) {
 			char *compressed = compress(buffer);
@@ -75,13 +77,12 @@ void process_file(char *file_name, FILE *file, int parts) {
 				args->file_name = file_name;
 				pthread_create(&threads[i], NULL, thread_function, args);
 			}
-			for (int j = 0; j < parts; j++) {
+			for (int j = 0; j < parts; j++)
 				pthread_join(threads[j], NULL);
-			}
 			free(array);
 		}
-		free(new_file);
 		free(buffer);
+		free(new_file);
 	}
 }
 
@@ -91,10 +92,10 @@ int main(int argc, char **argv) {
 	else {
     		FILE *file = fopen(argv[1], "r");
 		if (file == NULL) {
-			if (errno == ENOENT)
+			if (errno == EACCES)
+				fprintf(stderr, "Lack file read permissions\n");
+			else
 				fprintf(stderr, "File doesn't exist\n");
-			else if (errno == EACCES)
-				fprintf(stderr, "Don't have file read permissions\n");
 		}
 		else {
 			int parts = atoi(argv[2]);
