@@ -52,6 +52,12 @@ char* get_substring(char *string, int start, int end);
  */
 char** split_string(char *string, int parts);
 
+/**
+ * Checks if the next letter character in the string matches the character at index
+ * @param  string [input string]
+ * @param  index  [index of character to check]
+ * @return        [1 if the next letter character is the same, 0 otherwise]
+ */
 int next_char_same(char *string, int index);
 
 /**
