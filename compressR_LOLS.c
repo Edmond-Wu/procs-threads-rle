@@ -17,12 +17,16 @@ int main(int argc, char **argv) {
 		else {
 			int parts = atoi(argv[2]);
 			printf("Parts: %d\n", parts);
-			char *extracted = extract_file(file);
-			char *compressed = compress(extracted);
-			printf("Compressed: %s\n", compressed);
+			if (parts < 1)
+				fprintf(stderr, "Invalid number of parts\n");
+			else {
+				char *extracted = extract_file(file);
+				char *compressed = compress(extracted);
+				printf("Compressed: %s\n", compressed);
+				free(extracted);
+				free(compressed);
+			}
 			fclose(file);
-			free(compressed);
-			free(extracted);
 		}
 	}
 	return 0;
