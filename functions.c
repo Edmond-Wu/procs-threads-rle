@@ -87,8 +87,9 @@ int next_char_same(char *string, int index) {
 
 char* compress(char *string) {
 	int length = strlen(string);
-	char *compressed = (char *)malloc(sizeof(char) * (length * 2 + 1));
+	char *compressed = (char *)malloc(sizeof(char) * (length + 1));
 	int consecutive = 1;
+	int compressed_length = 0;
 	for (int i = 0; i < length; i++) {
 		char c = string[i];
 		if (!isalpha(c))
@@ -100,11 +101,14 @@ char* compress(char *string) {
 			if (consecutive == 1 || consecutive == 2) {
 				placeholder = (char *)malloc(sizeof(char) * 3);
 				placeholder[0] = c;
-				if (consecutive == 1)
+				if (consecutive == 1) {
 					placeholder[1] = '\0';
+					compressed_length++;
+				}
 				else {
 					placeholder[1] = c;
 					placeholder[2] = '\0';
+					compressed_length += 2;
 				}
 			}
 			else {
@@ -112,13 +116,14 @@ char* compress(char *string) {
 				int placeholder_length = 1 + num_digits(consecutive);
 				sprintf(placeholder, "%d%c", consecutive, c);
 				placeholder[placeholder_length] = '\0';
+				compressed_length += placeholder_length;
 			}
 			strcat(compressed, placeholder);
 			free(placeholder);
 			consecutive = 1;
 		}
 	}
-	int compressed_length = strlen(compressed);
+	printf("Compressed length: %d\n", compressed_length);
 	compressed[compressed_length] = '\0';
 	return compressed;
 }
