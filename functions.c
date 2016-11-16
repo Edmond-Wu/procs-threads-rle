@@ -88,6 +88,7 @@ int next_char_same(char *string, int index) {
 char* compress(char *string) {
 	int length = strlen(string);
 	char *compressed = (char *)malloc(sizeof(char) * (length + 1));
+	compressed[0] = '\0';
 	int consecutive = 1;
 	int compressed_length = 0;
 	for (int i = 0; i < length; i++) {
@@ -123,7 +124,7 @@ char* compress(char *string) {
 			consecutive = 1;
 		}
 	}
-	printf("Compressed length: %d\n", compressed_length);
+	//printf("Compressed length: %d\n", compressed_length);
 	compressed[compressed_length] = '\0';
 	return compressed;
 }
