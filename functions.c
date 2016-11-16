@@ -19,9 +19,8 @@ char* extract_file(FILE *file) {
 	fseek(file, 0, SEEK_END);
 	size_t length = ftell(file);
 	rewind(file);
-	char *buffer = (char *)malloc(length + 1);
+	char *buffer = (char *)malloc(length);
 	fread(buffer, 1, length, file);
-	buffer[length] = '\0';
 	return buffer;
 }
 
