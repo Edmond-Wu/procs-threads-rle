@@ -48,47 +48,42 @@ void process_file_R(char* file_name, FILE *file, int parts){
 			pid_t pid[parts];
 
 			for (children_procs = 0; children_procs < parts; children_procs++) {
-					pid[children_procs] = fork();
-
-					// Fork failure errors
-					if (pid[children_procs] == -1) {
-							if (errno == EAGAIN || errno == ENOMEM)
-								fprintf(stderr, "ERROR: Failed to fork child process, cannot allocate sufficient space\n");
-							else
-								fprintf(stderr, "Failed to fork new child process\n");
-							exit(-1);
+				pid[children_procs] = fork();
+				// Fork failure errors
+				if (pid[children_procs] == -1) {
+					if (errno == EAGAIN || errno == ENOMEM)
+						fprintf(stderr, "ERROR: Failed to fork child process, cannot allocate sufficient space\n");
+					else
+						fprintf(stderr, "Failed to fork new child process\n");
+					exit(-1);
+				}
+				// This is child process
+				if (pid[children_procs] == 0){
+					printf("compressR_LOLS: child process %d, child PID is %d\n", children_procs, getpid());
+					// Argument 1: Name of file to be executed
+					//char * worker_file = "compressR_worker_LOLS.c";
+					// Argument 2: Arguments for the file you just executed
+					// Part, String, File Name
+					char *path = "/Asst2/compressR_worker_LOLS.c";
+					char *argList[4];
+					argList[0] = (int)children_procs;
+					argList[1] = array[children_procs];
+					argList[2] = file_name;
+					argList[3] = NULL;
+					if (execvp(path, argList) < 0) {
+						fprintf(stderr, "ERROR: execvp() failed\n");
+						exit(-1);
 					}
-
-					// This is child process
-					if (pid[children_procs] == 0){
-							printf("compressR_LOLS: child process %d, child PID is %d\n", children_procs, getpid());
-							// Argument 1: Name of file to be executed
-							//char * worker_file = "compressR_worker_LOLS.c";
-							// Argument 2: Arguments for the file you just executed
-							// Part, String, File Name
-							char *path = "/Asst2/compressR_worker_LOLS.c";
-							char *argList[4];
-							argList[0] = (int)children_procs;
-							argList[1] = array[children_procs];
-							argList[2] = file_name;
-							argList[3] = NULL;
-							if (execvp(path, argList) < 0) {
-									fprintf(stderr, "ERROR: execvp() failed\n");
-									exit(-1);
-							}
-					}
-					// Else, this is parent process
-					else {
-						printf("compressR_LOLS: child process %d, parent process PID is %d\n", children_procs, getpid());
-					}
-
+				}
+				// Else, this is parent process
+				else {
+					printf("compressR_LOLS: child process %d, parent process PID is %d\n", children_procs, getpid());
+				}
 			}
-
 			// Parent needs to wait for all child processes to finish
 			for ( children_procs=0; children_procs < parts; children_procs++) {
 				pid_t childPID;
 				int childStatus;
-
 				childPID = wait(&childStatus);
 				printf("compressR_LOLS: child process %d exited with status %d\n",childPID, childStatus);
 			}

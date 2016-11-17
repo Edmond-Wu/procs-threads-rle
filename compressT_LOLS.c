@@ -92,8 +92,10 @@ int main(int argc, char **argv) {
 			int parts = atoi(argv[2]);
 			if (parts < 1)
 				fprintf(stderr, "Invalid number of parts to be split\n");
-			else
+			else {
+				printf("Parts: %d\n", parts);
 				process_file(argv[1], file, parts);
+			}
 			fclose(file);
 		}
 	}
