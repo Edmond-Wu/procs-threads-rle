@@ -1,12 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
-#include "functions.h"
-#include <string.h>
-#include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include "functions.h"
 
 pid_t fork(void);
 pid_t wait(int* status);

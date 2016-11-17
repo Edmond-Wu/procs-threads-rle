@@ -1,8 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include <math.h>
 #include "functions.h"
 
 /* Argument List
@@ -11,7 +6,6 @@
  *** Arg 3: File name
 */
 int main(int argc, char **argv) {
-
 		int part = argv[1];
 		char * string = argv[2];
 		char * file_name = argv[3];

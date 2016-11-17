@@ -73,11 +73,15 @@ void process_file(char *file_name, FILE *file, int parts) {
 	}
 }
 
+/**
+ * Arg 1: input file
+ * Arg 2: number of parts to be split
+ */
 int main(int argc, char **argv) {
 	if (argc != 3)
 		fprintf(stderr, "ERROR: Invalid number of arguments (2 required)\n");
 	else {
-    FILE *file = fopen(argv[1], "r");
+		FILE *file = fopen(argv[1], "r");
 		if (file == NULL) {
 			if (errno == EACCES)
 				fprintf(stderr, "Lack file read permissions\n");
