@@ -4,7 +4,7 @@ OBJS = compressT_LOLS.o functions.o
 OBJS2 = compressR_LOLS.o functions.o
 DEPS = functions.h
 
-all: compressT_LOLS compressR_LOLS
+all: compressT_LOLS compressR_LOLS compressR_worker_LOLS
 	rm *.o
 
 compressT_LOLS : $(OBJS)
@@ -13,11 +13,11 @@ compressT_LOLS : $(OBJS)
 compressR_LOLS: $(OBJS2)
 	$(CC) $(CLFAGS) $(OBJS2) -o compressR_LOLS -lm
 
-compressR_LOLS.o: compressR_LOLS.c
-	$(CC) $(CFLAGS) -c compressR_LOLS.c
-
 compressT_LOLS.o: compressT_LOLS.c
 	$(CC) $(CFLAGS) -c compressT_LOLS.c
+
+compressR_LOLS.o: compressR_LOLS.c
+	$(CC) $(CFLAGS) -c compressR_LOLS.c
 
 functions.o: functions.c functions.h
 	$(CC) $(CFLAGS) -c functions.c
