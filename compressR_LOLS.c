@@ -40,8 +40,10 @@ void process_file_R(char* file_name, FILE *file, int parts){
 			write_file(new_file, compressed);
 			printf("Compressed string: %s\n", compressed);
 			free(compressed);
+			free(new_file);
+			free(buffer);
+			return;
 		}
-
 		// Parts > 1, spawn children processes = number of parts
 		else {
 			char **array = split_string(buffer, parts);
@@ -81,13 +83,18 @@ void process_file_R(char* file_name, FILE *file, int parts){
 				}
 			}
 			// Parent needs to wait for all child processes to finish
-			for ( children_procs=0; children_procs < parts; children_procs++) {
+			for (children_procs = 0; children_procs < parts; children_procs++) {
 				pid_t childPID;
 				int childStatus;
 				childPID = wait(&childStatus);
 				printf("compressR_LOLS: child process %d exited with status %d\n",childPID, childStatus);
 			}
+			for (int i = 0; i < parts; i++)
+				free(array[i]);
+			free(array);
 		}
+		free(new_file);
+		free(buffer);
 	}
 }
 
