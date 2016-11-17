@@ -4,7 +4,7 @@ OBJS = compressT_LOLS.o functions.o
 OBJS2 = compressR_LOLS.o functions.o
 DEPS = functions.h
 
-all: compressT_LOLS compressR_LOLS compressR_worker_LOLS
+all: compressT_LOLS compressR_LOLS
 	rm *.o
 
 compressT_LOLS : $(OBJS)
