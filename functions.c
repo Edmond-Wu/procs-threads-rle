@@ -20,7 +20,7 @@ char* extract_file(FILE *file) {
 	size_t length = ftell(file);
 	rewind(file);
 	char *buffer = (char *)malloc(length);
-	fread(buffer, 1, length, file);
+	fread(buffer, 1, length - 1, file);
 	return buffer;
 }
 
