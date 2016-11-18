@@ -24,6 +24,11 @@ void process_file_R(char* file_name, FILE *file, int parts) {
 	else {
 		int file_name_length = strlen(file_name);
 		char *buffer = extract_file(file);
+		if (parts > strlen(buffer)) {
+			fprintf(stderr, "Number of parts exceeds number of characters in file\n");
+			free(buffer);
+			return;
+		}
 		char *new_file = (char *)malloc(sizeof(char) * (file_name_length + 6));
 		strncpy(new_file, file_name, file_name_length - strlen(strpbrk(file_name, ".")));
 		sprintf(new_file, "%s_%s_LOLS", new_file, get_file_extension(file_name));
