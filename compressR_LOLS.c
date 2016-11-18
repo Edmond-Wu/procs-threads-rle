@@ -99,11 +99,12 @@ void process_file_R(char* file_name, FILE *file, int parts){
 
 		for (int i = 0; i < parts; i++)
 				free(array[i]);
-				
+
 		free(array);
 		free(new_file);
 		free(buffer);
 	}
+}
 }
 
 // Argument 1: File to compress
@@ -130,6 +131,7 @@ int main(int argc, char **argv) {
 			// All error checking done, spawn children
 			else
 				process_file_R (argv[1], file, parts);
+
 			fclose(file);
 		}
 	}
