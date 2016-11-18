@@ -65,34 +65,38 @@ void process_file_R(char* file_name, FILE *file, int parts){
 					if (pid[children_procs] == 0){
 							printf("compressR_LOLS: child process %d, child PID is %d\n", children_procs, getpid());
 							// Argument 1: Name of file to be executed
-							//char * worker_file = "compressR_worker_LOLS.c";
 							// Argument 2: Arguments for the file you just executed
-							// Part, String, File Name
-							char *path = "/Asst2/compressR_worker_LOLS.c";
-							char *argList[4];
-							argList[0] = (int)children_procs;
-							argList[1] = array[children_procs];
-							argList[2] = file_name;
-							argList[3] = NULL;
-							if (execvp(path, argList) < 0) {
+							// Part, String, Input File Name
+							char *argList[5];
+							argList[0] = "./compressR_worker_LOLS";
+
+							char sParts[32];
+							sprintf( sParts, "%d", children_procs );
+							argList[1] = sParts;
+
+							argList[2] = array[children_procs];
+							argList[3] = file_name;
+							argList[4] = NULL;
+
+							if (execvp(argList[0], argList) < 0) {
 									fprintf(stderr, "ERROR: execvp() failed\n");
 									exit(-1);
 							}
 					}
 					// Else, this is parent process
 					else {
-						printf("compressR_LOLS: child process %d, parent process PID is %d\n", children_procs, getpid());
+						printf("compressR_LOLS: child process %d, parent process PID is %d\n", children_procs, (int)getpid());
 					}
 
 			}
 
 			// Parent needs to wait for all child processes to finish
-			for ( children_procs=0; children_procs < parts; children_procs++) {
+			for ( children_procs = 0; children_procs < parts; children_procs++) {
 				pid_t childPID;
 				int childStatus;
 
 				childPID = wait(&childStatus);
-				printf("compressR_LOLS: child process %d exited with status %d\n",childPID, childStatus);
+				printf("compressR_LOLS: child process %d exited with status %d\n",(int)childPID, childStatus);
 			}
 		}
 	}
