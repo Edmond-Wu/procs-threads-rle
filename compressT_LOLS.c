@@ -15,7 +15,7 @@ void* thread_function(Args *args) {
 	char *new_file_name = (char *)malloc(sizeof(char) * (file_name_length + 7));
 	strncpy(new_file_name, args->file_name, file_name_length - strlen(strpbrk(args->file_name, ".")));
 	sprintf(new_file_name, "%s_%s_LOLS%d", new_file_name, get_file_extension(args->file_name), args->part);
-	printf("Compressed string: %s\n", compressed);
+	printf("Thread %d compressed string: %s\n", args->part, compressed);
 	write_file(new_file_name, compressed);
 	free(new_file_name);
 	free(compressed);
@@ -52,6 +52,7 @@ void process_file(char *file_name, FILE *file, int parts) {
 			free(buffer);
 			return;
 		}
+		//compress normally for 1 part
 		if (parts == 1) {
 			char *compressed = compress(buffer);
 			write_file(new_file, compressed);
