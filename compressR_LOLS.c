@@ -1,12 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
-#include "functions.h"
-#include <string.h>
-#include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include "functions.h"
 
 pid_t fork(void);
 pid_t wait(int* status);
@@ -42,24 +40,43 @@ void process_file_R(char* file_name, FILE *file, int parts){
 			write_file(new_file, compressed);
 			printf("Compressed string: %s\n", compressed);
 			free(compressed);
+			free(new_file);
+			free(buffer);
+			return;
 		}
-
 		// Parts > 1, spawn children processes = number of parts
 		else {
 			char **array = split_string(buffer, parts);
 			pid_t pid[parts];
 
 			for (children_procs = 0; children_procs < parts; children_procs++) {
-					pid[children_procs] = fork();
-
-					// Fork failure errors
-					if (pid[children_procs] == -1) {
-							if (errno == EAGAIN || errno == ENOMEM)
-								fprintf(stderr, "ERROR: Failed to fork child process, cannot allocate sufficient space\n");
-							else
-								fprintf(stderr, "Failed to fork new child process\n");
-							exit(-1);
+				pid[children_procs] = fork();
+				// Fork failure errors
+				if (pid[children_procs] == -1) {
+					if (errno == EAGAIN || errno == ENOMEM)
+						fprintf(stderr, "ERROR: Failed to fork child process, cannot allocate sufficient space\n");
+					else
+						fprintf(stderr, "Failed to fork new child process\n");
+					exit(-1);
+				}
+				// This is child process
+				if (pid[children_procs] == 0){
+					printf("compressR_LOLS: child process %d, child PID is %d\n", children_procs, getpid());
+					// Argument 1: Name of file to be executed
+					//char * worker_file = "compressR_worker_LOLS.c";
+					// Argument 2: Arguments for the file you just executed
+					// Part, String, File Name
+					char *path = "/Asst2/compressR_worker_LOLS.c";
+					char *argList[4];
+					argList[0] = (int)children_procs;
+					argList[1] = array[children_procs];
+					argList[2] = file_name;
+					argList[3] = NULL;
+					if (execvp(path, argList) < 0) {
+						fprintf(stderr, "ERROR: execvp() failed\n");
+						exit(-1);
 					}
+<<<<<<< HEAD
 
 					// This is child process
 					if (pid[children_procs] == 0){
@@ -88,17 +105,31 @@ void process_file_R(char* file_name, FILE *file, int parts){
 						printf("compressR_LOLS: child process %d, parent process PID is %d\n", children_procs, (int)getpid());
 					}
 
+=======
+				}
+				// Else, this is parent process
+				else {
+					printf("compressR_LOLS: child process %d, parent process PID is %d\n", children_procs, getpid());
+				}
+>>>>>>> 1444be07db86ce83c4f3a8c0daf0463c67d092d6
 			}
-
 			// Parent needs to wait for all child processes to finish
+<<<<<<< HEAD
 			for ( children_procs = 0; children_procs < parts; children_procs++) {
+=======
+			for (children_procs = 0; children_procs < parts; children_procs++) {
+>>>>>>> 1444be07db86ce83c4f3a8c0daf0463c67d092d6
 				pid_t childPID;
 				int childStatus;
-
 				childPID = wait(&childStatus);
 				printf("compressR_LOLS: child process %d exited with status %d\n",(int)childPID, childStatus);
 			}
+			for (int i = 0; i < parts; i++)
+				free(array[i]);
+			free(array);
 		}
+		free(new_file);
+		free(buffer);
 	}
 }
 
