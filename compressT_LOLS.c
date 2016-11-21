@@ -9,13 +9,12 @@
  */
 void* thread_function(Args *args) {
 	char *compressed = compress(args->string);
-	//printf("Compressed: %s\n", compressed);
+	printf("Compressed: %s\n", compressed);
 	int file_name_length = strlen(args->file_name);
 	//creating new file name and writing to that file
 	char *new_file_name = (char *)malloc(sizeof(char) * (file_name_length + 7));
 	strncpy(new_file_name, args->file_name, file_name_length - strlen(strpbrk(args->file_name, ".")));
 	sprintf(new_file_name, "%s_%s_LOLS%d", new_file_name, get_file_extension(args->file_name), args->part);
-	printf("Thread %d compressed string: %s\n", args->part, compressed);
 	write_file(new_file_name, compressed);
 	free(new_file_name);
 	free(compressed);
@@ -61,13 +60,15 @@ void process_file(char *file_name, FILE *file, int parts) {
 		}
 		else {
 			char **array = split_string(buffer, parts);
-			//multi-threading, number of threads = number of parts to be split
+			//multi-thareading, number of threads = number of parts to be split
 			pthread_t threads[parts];
 			for (int i = 0; i < parts; i++) {
 				Args *args = (Args *)malloc(sizeof(Args));
 				args->part = i;
 				args->string = array[i];
+				//printf("Length of string part: %d\n", (int)strlen(array[i]));
 				args->file_name = file_name;
+				//printf("%d %s\n", i, array[i]);
 				pthread_create(&threads[i], NULL, thread_function, args);
 			}
 			for (int j = 0; j < parts; j++)

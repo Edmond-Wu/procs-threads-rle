@@ -21,6 +21,8 @@ char* extract_file(FILE *file) {
 	rewind(file);
 	char *buffer = (char *)malloc(length);
 	fread(buffer, 1, length - 1, file);
+	//int buffer_length = strlen(buffer);
+	//printf("Buffer length: %d\n", buffer_length);
 	return buffer;
 }
 
@@ -28,9 +30,8 @@ char* get_substring(char *string, int start, int end) {
 	int difference = end - start;
 	char *substring = malloc((difference + 1) * sizeof(char));
 	int i;
-	for (i = start; i < end; i++) {
+	for (i = start; i < end; i++) 
 		substring[i - start] = string[i];
-	}
 	substring[difference] = '\0';
 	return substring;
 }
@@ -89,6 +90,11 @@ char* compress(char *string) {
 	int length = strlen(string);
 	char *compressed = (char *)malloc(sizeof(char) * (length + 1));
 	compressed[0] = '\0';
+	if (length == 1 && isalpha(string[0])) {
+		compressed[0] = string[0];
+		compressed[1] = '\0';
+		return compressed;
+	}
 	int consecutive = 1;
 	int compressed_length = 0;
 	for (int i = 0; i < length; i++) {
