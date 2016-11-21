@@ -21,8 +21,6 @@ char* extract_file(FILE *file) {
 	rewind(file);
 	char *buffer = (char *)malloc(length);
 	fread(buffer, 1, length - 1, file);
-	//int buffer_length = strlen(buffer);
-	//printf("Buffer length: %d\n", buffer_length);
 	return buffer;
 }
 

@@ -66,9 +66,7 @@ void process_file(char *file_name, FILE *file, int parts) {
 				Args *args = (Args *)malloc(sizeof(Args));
 				args->part = i;
 				args->string = array[i];
-				//printf("Length of string part: %d\n", (int)strlen(array[i]));
 				args->file_name = file_name;
-				//printf("%d %s\n", i, array[i]);
 				pthread_create(&threads[i], NULL, thread_function, args);
 			}
 			for (int j = 0; j < parts; j++)
