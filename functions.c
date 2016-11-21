@@ -128,7 +128,6 @@ char* compress(char *string) {
 			consecutive = 1;
 		}
 	}
-	//printf("Compressed length: %d\n", compressed_length);
 	compressed[compressed_length] = '\0';
 	return compressed;
 }
