@@ -1,0 +1,12 @@
+Toni Au
+Edmond Wu
+CS214: Procs vs. Threads Test Plan
+
+Test case 1 (test.txt):
+qwwwwwwwwweeeeerrtyyyyyqqqqweeeEErTTTaaaaaaaZZZv
+
+Test case 2 (bigfile.txt):
+oooo
+
+Test case 3 (stuff.txt):
+jjjjjjjjjjoooooooaaaaaaaanrr

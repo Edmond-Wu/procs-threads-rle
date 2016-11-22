@@ -28,9 +28,8 @@ char* get_substring(char *string, int start, int end) {
 	int difference = end - start;
 	char *substring = malloc((difference + 1) * sizeof(char));
 	int i;
-	for (i = start; i < end; i++) {
+	for (i = start; i < end; i++) 
 		substring[i - start] = string[i];
-	}
 	substring[difference] = '\0';
 	return substring;
 }
@@ -89,6 +88,11 @@ char* compress(char *string) {
 	int length = strlen(string);
 	char *compressed = (char *)malloc(sizeof(char) * (length + 1));
 	compressed[0] = '\0';
+	if (length == 1 && isalpha(string[0])) {
+		compressed[0] = string[0];
+		compressed[1] = '\0';
+		return compressed;
+	}
 	int consecutive = 1;
 	int compressed_length = 0;
 	for (int i = 0; i < length; i++) {
@@ -124,7 +128,6 @@ char* compress(char *string) {
 			consecutive = 1;
 		}
 	}
-	//printf("Compressed length: %d\n", compressed_length);
 	compressed[compressed_length] = '\0';
 	return compressed;
 }

@@ -17,13 +17,18 @@ pid_t wait(int* status);
  * @param file      [actual file named file_name]
  * @param parts     [how many parts to be split]
  */
-void process_file_R(char* file_name, FILE *file, int parts){
+void process_file_R(char* file_name, FILE *file, int parts) {
 	int children_procs = 0;
 	if (file == NULL)
 		fprintf(stderr, "Invalid file input\n");
 	else {
 		int file_name_length = strlen(file_name);
 		char *buffer = extract_file(file);
+		if (parts > strlen(buffer)) {
+			fprintf(stderr, "Number of parts exceeds number of characters in file\n");
+			free(buffer);
+			return;
+		}
 		char *new_file = (char *)malloc(sizeof(char) * (file_name_length + 6));
 		strncpy(new_file, file_name, file_name_length - strlen(strpbrk(file_name, ".")));
 		sprintf(new_file, "%s_%s_LOLS", new_file, get_file_extension(file_name));
@@ -35,22 +40,22 @@ void process_file_R(char* file_name, FILE *file, int parts){
 			free(buffer);
 			return;
 		}
-
+		//compress normally with 1 part
 		if (parts == 1) {
 			char *compressed = compress(buffer);
 			write_file(new_file, compressed);
 			printf("Compressed string: %s\n", compressed);
 			free(compressed);
+			free(new_file);
+			free(buffer);
+			return;
 		}
-
 		// Parts > 1, spawn children processes = number of parts
 		else {
 			char **array = split_string(buffer, parts);
 			pid_t pid[parts];
-
 			for (children_procs = 0; children_procs < parts; children_procs++) {
 				pid[children_procs] = fork();
-
 				// Fork failure errors
 				if (pid[children_procs] == -1) {
 					if (errno == EAGAIN || errno == ENOMEM)
@@ -59,9 +64,9 @@ void process_file_R(char* file_name, FILE *file, int parts){
 						fprintf(stderr, "Failed to fork new child process\n");
 					exit(-1);
 				}
-
 				// This is child process
 				if (pid[children_procs] == 0) {
+<<<<<<< HEAD
 						printf("child process %d, child PID is %d\n", children_procs, (int)getpid());
 						// Argument 1: Name of file to be executed
 						// Argument 2: Arguments for the file you just executed
@@ -81,30 +86,54 @@ void process_file_R(char* file_name, FILE *file, int parts){
 								fprintf(stderr, "ERROR: execvp() failed\n");
 								exit(-1);
 						}
+=======
+					printf("compressR_LOLS: child process %d, child PID is %d\n", children_procs, (int)getpid());
+					/* Argument 1: Name of file to be executed
+					 * Argument 2: Arguments for the file you just executed
+					 * Part, String, Input File Name
+					 */
+					char *argList[5];
+					argList[0] = "./compressR_worker_LOLS";
+					char sParts[32];
+					sprintf(sParts, "%d", children_procs );
+					argList[1] = sParts;
+					argList[2] = array[children_procs];
+					argList[3] = file_name;
+					argList[4] = NULL;
+					if (execvp(argList[0], argList) < 0) {
+						fprintf(stderr, "ERROR: execvp() failed\n");
+						exit(-1);
+					}
+>>>>>>> a71c9918d121d6efac414d126678758b167d3d9d
 				}
 				// Else, this is parent process
 				else {
 					printf("child process %d, parent process PID is %d\n", children_procs, (int)getpid());
 				}
-
-		}
-
-		// Parent needs to wait for all child processes to finish
-		for (children_procs = 0; children_procs < parts; children_procs++) {
+			}
+			// Parent needs to wait for all child processes to finish
+			for (children_procs = 0; children_procs < parts; children_procs++) {
 				pid_t childPID;
 				int childStatus;
 				childPID = wait(&childStatus);
 				printf("compressR_LOLS: child process %d exited with status %d\n",(int)childPID, childStatus);
-		}
-
-		for (int i = 0; i < parts; i++)
+			}
+			for (int i = 0; i < parts; i++)
 				free(array[i]);
+<<<<<<< HEAD
 				
 		free(array);
 		free(new_file);
 		free(buffer);
 	}
 	}
+=======
+			free(array);
+			free(new_file);
+			free(buffer);
+		}
+	}
+>>>>>>> a71c9918d121d6efac414d126678758b167d3d9d
 }
 
 // Argument 1: File to compress
@@ -121,7 +150,6 @@ int main(int argc, char **argv) {
 			else
 				fprintf(stderr, "File does not exist\n");
 		}
-
 		else {
 			int parts = atoi(argv[2]);
 			printf("Parts: %d\n", parts);
