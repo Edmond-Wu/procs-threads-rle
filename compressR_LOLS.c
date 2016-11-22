@@ -66,7 +66,7 @@ void process_file_R(char* file_name, FILE *file, int parts) {
 				}
 				// This is child process
 				if (pid[children_procs] == 0) {
-<<<<<<< HEAD
+
 						printf("child process %d, child PID is %d\n", children_procs, (int)getpid());
 						// Argument 1: Name of file to be executed
 						// Argument 2: Arguments for the file you just executed
@@ -86,30 +86,11 @@ void process_file_R(char* file_name, FILE *file, int parts) {
 								fprintf(stderr, "ERROR: execvp() failed\n");
 								exit(-1);
 						}
-=======
-					printf("compressR_LOLS: child process %d, child PID is %d\n", children_procs, (int)getpid());
-					/* Argument 1: Name of file to be executed
-					 * Argument 2: Arguments for the file you just executed
-					 * Part, String, Input File Name
-					 */
-					char *argList[5];
-					argList[0] = "./compressR_worker_LOLS";
-					char sParts[32];
-					sprintf(sParts, "%d", children_procs );
-					argList[1] = sParts;
-					argList[2] = array[children_procs];
-					argList[3] = file_name;
-					argList[4] = NULL;
-					if (execvp(argList[0], argList) < 0) {
-						fprintf(stderr, "ERROR: execvp() failed\n");
-						exit(-1);
+
+					// Else, this is parent process
+					else {
+						printf("child process %d, parent process PID is %d\n", children_procs, (int)getpid());
 					}
->>>>>>> a71c9918d121d6efac414d126678758b167d3d9d
-				}
-				// Else, this is parent process
-				else {
-					printf("child process %d, parent process PID is %d\n", children_procs, (int)getpid());
-				}
 			}
 			// Parent needs to wait for all child processes to finish
 			for (children_procs = 0; children_procs < parts; children_procs++) {
@@ -120,20 +101,14 @@ void process_file_R(char* file_name, FILE *file, int parts) {
 			}
 			for (int i = 0; i < parts; i++)
 				free(array[i]);
-<<<<<<< HEAD
-				
+
 		free(array);
 		free(new_file);
 		free(buffer);
 	}
 	}
-=======
-			free(array);
-			free(new_file);
-			free(buffer);
-		}
-	}
->>>>>>> a71c9918d121d6efac414d126678758b167d3d9d
+
+}
 }
 
 // Argument 1: File to compress
@@ -159,9 +134,9 @@ int main(int argc, char **argv) {
 			// All error checking done, spawn children
 			else
 				process_file_R (argv[1], file, parts);
-		
+
 			fclose(file);
 		}
 	}
-	//return 0;
+	return 0;
 }
