@@ -57,7 +57,7 @@ char** split_string(char *string, int parts) {
 			}
 			//otherwise it means you're at last segment
 			else {
-				int difference = length - counter - 1;
+				int difference = length - counter;
 				substring = get_substring(string, counter, counter + difference);
 			}
 		}
