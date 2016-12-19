@@ -8,14 +8,15 @@
  * @param args [argument struct, which includes a string, file name, and int]
  */
 void* thread_function(Args *args) {
+	printf("Split %d: %s\n", args->part, args->string);
 	char *compressed = compress(args->string);
-	printf("Compressed: %s\n", compressed);
 	int file_name_length = strlen(args->file_name);
 	//creating new file name and writing to that file
 	char *new_file_name = (char *)malloc(sizeof(char) * (file_name_length + 7));
 	strncpy(new_file_name, args->file_name, file_name_length - strlen(strpbrk(args->file_name, ".")));
 	sprintf(new_file_name, "%s_%s_LOLS%d", new_file_name, get_file_extension(args->file_name), args->part);
-	write_file(new_file_name, compressed);
+	//write_file(new_file_name, compressed);
+	printf("Compressed %d: %s\n", args->part, compressed);
 	free(new_file_name);
 	free(compressed);
 	free(args->string);
@@ -63,6 +64,7 @@ void process_file(char *file_name, FILE *file, int parts) {
 			//multi-thareading, number of threads = number of parts to be split
 			pthread_t threads[parts];
 			for (int i = 0; i < parts; i++) {
+				//printf("Split %d: %s\n", i, array[i]);
 				Args *args = (Args *)malloc(sizeof(Args));
 				args->part = i;
 				args->string = array[i];

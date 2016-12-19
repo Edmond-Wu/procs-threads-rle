@@ -124,6 +124,7 @@ char* compress(char *string) {
 				compressed_length += placeholder_length;
 			}
 			strcat(compressed, placeholder);
+			//printf("Placeholder: %s\n", placeholder);
 			free(placeholder);
 			consecutive = 1;
 		}

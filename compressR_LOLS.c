@@ -55,6 +55,7 @@ void process_file_R(char* file_name, FILE *file, int parts) {
 			char **array = split_string(buffer, parts);
 			pid_t pid[parts];
 			for (children_procs = 0; children_procs < parts; children_procs++) {
+				printf("Split %d: %s\n", children_procs, array[children_procs]);
 				pid[children_procs] = fork();
 				// Fork failure errors
 				if (pid[children_procs] == -1) {
@@ -66,31 +67,27 @@ void process_file_R(char* file_name, FILE *file, int parts) {
 				}
 				// This is child process
 				if (pid[children_procs] == 0) {
-
-						printf("child process %d, child PID is %d\n", children_procs, (int)getpid());
-						// Argument 1: Name of file to be executed
-						// Argument 2: Arguments for the file you just executed
-						// Part, String, Input File Name
-						char *argList[5];
-						argList[0] = "./compressR_worker_LOLS";
-
-						char sParts[32];
-						sprintf( sParts, "%d", children_procs );
-						argList[1] = sParts;
-
-						argList[2] = array[children_procs];
-						argList[3] = file_name;
-						argList[4] = NULL;
-
-						if (execvp(argList[0], argList) < 0) {
-								fprintf(stderr, "ERROR: execvp() failed\n");
-								exit(-1);
-						}
-
+					printf("child process %d, child PID is %d\n", children_procs, (int)getpid());
+					// Argument 1: Name of file to be executed
+					// Argument 2: Arguments for the file you just executed
+					// Part, String, Input File Name
+					char *argList[5];
+					argList[0] = "./compressR_worker_LOLS";
+					char sParts[32];
+					sprintf( sParts, "%d", children_procs );
+					argList[1] = sParts;
+					argList[2] = array[children_procs];
+					argList[3] = file_name;
+					argList[4] = NULL;
+					if (execvp(argList[0], argList) < 0) {
+						fprintf(stderr, "ERROR: execvp() failed\n");
+						exit(-1);
+					}
 					// Else, this is parent process
 					else {
 						printf("child process %d, parent process PID is %d\n", children_procs, (int)getpid());
 					}
+				}
 			}
 			// Parent needs to wait for all child processes to finish
 			for (children_procs = 0; children_procs < parts; children_procs++) {
@@ -101,14 +98,11 @@ void process_file_R(char* file_name, FILE *file, int parts) {
 			}
 			for (int i = 0; i < parts; i++)
 				free(array[i]);
-
-		free(array);
-		free(new_file);
-		free(buffer);
+			free(array);
+			free(new_file);
+			free(buffer);
+		}
 	}
-	}
-
-}
 }
 
 // Argument 1: File to compress
